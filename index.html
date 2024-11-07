@@ -4,7 +4,6 @@
         <title>Search results</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <!-- <link rel="stylesheet" href="styles.css" /> -->
         
         <!-- Patronaut's answer on https://stackoverflow.com/questions/21147149/flash-of-unstyled-content-fouc-in-firefox-only-is-ff-slow-renderer -->
         <script>
@@ -19,9 +18,10 @@
                 return (
                     "<div>" +
                         "<h2>" + card.name + "</h2>" +
-                        // Might not have an image
-                        (card.image_uris ? "<img src='" + card.image_uris["small"] + "' style='display: block'>"
-                            : "<p>No image found</p>") +
+                        // Account for flip cards
+                        "<img src='" +
+                            (card.image_uris ? card.image_uris["small"] : card.card_faces[card.card_faces.length - 1].image_uris["small"]) +
+                        "' style='display: block'>" +
                         "<a href='" + card.purchase_uris["tcgplayer"] + "'>Purchase on TCGPlayer</a>" +
                     "</div>"
                 );
