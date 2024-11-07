@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Search results</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <!-- <link rel="stylesheet" href="styles.css" /> -->
+        
+        <!-- Patronaut's answer on https://stackoverflow.com/questions/21147149/flash-of-unstyled-content-fouc-in-firefox-only-is-ff-slow-renderer -->
+        <script>
+            /*to prevent Firefox FOUC, this must be here*/
+            let FF_FOUC_FIX;
+        </script>
+    </head>
+    
+    <body>
+        <script>
+            const show_result = (card) => {
+                return (
+                    "<div>" +
+                        "<h2>" + card.name + "</h2>" +
+                        // Might not have an image
+                        (card.image_uris ? "<img src='" + card.image_uris["small"] + "' style='display: block'>"
+                            : "<p>No image found</p>") +
+                        "<a href='" + card.purchase_uris["tcgplayer"] + "'>Purchase on TCGPlayer</a>" +
+                    "</div>"
+                );
+            };
+
+            const show_results = (data) => {
+                const content = document.getElementById("results");
+                content.innerHTML = data.map(show_result)
+                                        .join("");
+            };
+
+            fetch("https://api.scryfall.com/cards/search?q=liliana+t%3Aplaneswalker")
+                    .then(res => res.text())
+                    .then(text => {
+                        text = JSON.parse(text);
+                        show_results(text.data);
+            });
+        </script>
+
+        <h1>Search results for "liliana t:planeswalker"</h1>
+
+        <div id="results"></div>
+
+        <ul>
+            <li>This page uses the Scryfall API, which provides access to a database of cards from Magic: the
+                Gathering.</li>
+            <li>Here is <a href="https://scryfall.com/">a link to the Scryfall website</a>.</li>
+            <li>The API call here is a search on the card name (contains <code>liliana</code>) and type
+                (<code>planeswalker</code>). Card name filters don't require any special syntax, but searching for
+                the type requires a <code>t:</code> before <code>planeswalker</code>, hence the encoded character in
+                the query string.</li>
+            <li>Applications
+                <ol>
+                    <li>This API powers the Scryfall website, which Magic players use a lot when checking for rulings
+                        on a specific card or when looking for cards while deckbuilding.</li>
+                    <li>Because Scryfall has an exhaustive database on Magic card art, webpages written about Magic
+                        content often retrieve card images from it. For example, if they mention a specific card, they
+                        will often have a roll-over link that will also show a picture of the card when hovered.</li>
+                </ol>
+            </li>
+        </ul>
+    </body>
+</html>
